@@ -1,0 +1,27 @@
+name: Daily Automatic Commit
+
+on:
+  schedule:
+    # Runs every day at 1:00 AM Pakistan Time (8:00 PM UTC)
+    - cron: '0 20 * * *'
+  # Allows you to click a button to test it manually at any time
+  workflow_dispatch: 
+
+jobs:
+  make-commit:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+
+    - name: Modify log file
+      run: |
+        echo "Last automated update: $(date)" > daily_log.txt
+
+    - name: Commit and Push changes
+      run: |
+        git config --local user.email "mahbooburrehman001@gmail.com"
+        git config --local user.name "Kosar Bibi"
+        git add daily_log.txt
+        git commit -m "chore: automated daily update [skip ci]" || echo "No changes to commit"
+        git push
